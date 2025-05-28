@@ -1,0 +1,7 @@
+ckpt_path: "path/to/checkpoint.ckpt" # путь к сохранённой модели
+data_dir: "data" # папка с видео для теста
+batch_size: 8
+num_workers: 0
+seq_len: 16
+target_size: [128, 128]
+num_classes: 51

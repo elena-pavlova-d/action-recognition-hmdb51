@@ -1,0 +1,7 @@
+defaults:
+  - download_data@_here_: download_data
+  - training: training
+  - model: model
+  - inference: inference
+  - mlflow: mlflow
+  - _self_

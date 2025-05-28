@@ -1,0 +1,38 @@
+base_dir: ${hydra:runtime.cwd}
+data_dir: ${base_dir}/dataa
+raw_data_dir: ${data_dir}/raw_dataa
+extracted_data_dir: ${data_dir}/dataa
+rar_path: ${base_dir}/hmdb51_org.rar
+download_url: http://serre-lab.clps.brown.edu/wp-content/uploads/2013/10/hmdb51_org.rar
+split:
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+  seed: 42
+training:
+  max_epochs: 2
+  learning_rate: 0.001
+  batch_size: 8
+  num_workers: 0
+  seq_len: 16
+  target_size:
+    - 128
+    - 128
+  accelerator: auto
+  enable_progress_bar: true
+model:
+  num_classes: 51
+  save_top_k: 2
+  monitor: val_acc
+  mode: max
+  checkpoint_filename: best-{epoch}-{val_acc:.2f}
+inference:
+  ckpt_path: path/to/checkpoint.ckpt
+  data_dir: data/data
+  batch_size: 8
+  num_workers: 0
+  seq_len: 16
+  target_size:
+    - 128
+    - 128
+  num_classes: 51

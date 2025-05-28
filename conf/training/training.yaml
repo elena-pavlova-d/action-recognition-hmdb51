@@ -1,0 +1,22 @@
+max_epochs: 3
+learning_rate: 0.001
+batch_size: 8
+num_workers: 0
+seq_len: 16
+target_size: [128, 128]
+accelerator: auto
+enable_progress_bar: true
+
+logging:
+  metrics:
+    - train_loss
+    - train_acc
+    - val_loss
+    - val_acc
+    - test_loss
+    - test_acc
+  params_to_log:
+    - batch_size
+    - learning_rate
+    - seq_len
+    - target_size
