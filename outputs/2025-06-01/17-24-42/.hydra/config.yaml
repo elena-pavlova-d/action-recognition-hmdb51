@@ -1,0 +1,11 @@
+base_dir: ${hydra:runtime.cwd}
+data_dir: ${base_dir}/data
+raw_data_dir: ${data_dir}/raw_data
+extracted_data_dir: ${data_dir}/data
+rar_path: ${base_dir}/hmdb51_org.rar
+download_url: http://serre-lab.clps.brown.edu/wp-content/uploads/2013/10/hmdb51_org.rar
+split:
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+  seed: 42

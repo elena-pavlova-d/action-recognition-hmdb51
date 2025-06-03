@@ -2,9 +2,7 @@ from pathlib import Path
 
 import hydra
 import pytorch_lightning as pl
-from omegaconf import (  # from pytorch_lightning.callbacks import ModelCheckpoint
-    DictConfig,
-)
+from omegaconf import DictConfig
 
 from action_recognition.pl_modules.data import HumanActionDataModule
 from action_recognition.pl_modules.model import VideoActionModel
@@ -14,7 +12,6 @@ from action_recognition.pl_modules.model import VideoActionModel
     config_path="../../conf/inference", config_name="inference", version_base="1.3"
 )
 def infer(cfg: DictConfig):
-    # Данные
     data_dir = Path(cfg.data_dir)
 
     datamodule = HumanActionDataModule(
@@ -27,13 +24,10 @@ def infer(cfg: DictConfig):
     )
     datamodule.setup(stage="test")
 
-    # Загружаем модель из чекпоинта
     model = VideoActionModel.load_from_checkpoint(cfg.ckpt_path)
 
-    # Создаем тренера без обучения, только для теста
     trainer = pl.Trainer(accelerator="auto")
 
-    # Запускаем тестирование
     trainer.test(model=model, datamodule=datamodule)
 
 

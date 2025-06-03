@@ -60,5 +60,15 @@ class VideoActionModel(pl.LightningModule):
         self.log("val_loss", loss, prog_bar=True)
         self.log("val_acc", self.accuracy(logits, y), prog_bar=True)
 
+    def test_step(self, batch, batch_idx):
+        x, y = batch
+        logits = self(x)
+        loss = F.cross_entropy(logits, y)
+        acc = self.accuracy(
+            logits, y
+        )  # тут меняю self.test_accuracy(logits, y) на self.accuracy(logits, y)
+        self.log("test_loss", loss, prog_bar=True)
+        self.log("test_acc", acc, prog_bar=True)
+
     def configure_optimizers(self):
         return Adam(self.parameters(), lr=self.lr)

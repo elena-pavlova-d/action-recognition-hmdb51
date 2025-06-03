@@ -1,0 +1,3 @@
+ckpt_path: "lightning_logs/version_13/checkpoints/best-epoch=2-val_acc=0.10.ckpt"
+output_path: "video_action_model.onnx"
+input_shape: [1, 16, 3, 128, 128]

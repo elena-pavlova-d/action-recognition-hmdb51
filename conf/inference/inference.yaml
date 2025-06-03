@@ -1,5 +1,5 @@
-ckpt_path: "path/to/checkpoint.ckpt" # путь к сохранённой модели
-data_dir: "data" # папка с видео для теста
+ckpt_path: "lightning_logs/version_45/checkpoints/best-epoch=0-val_acc=0.08.ckpt" # путь к сохранённой модели
+data_dir: "data"
 batch_size: 8
 num_workers: 0
 seq_len: 16

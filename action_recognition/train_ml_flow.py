@@ -18,7 +18,6 @@ class MLflowLogger(pl.Callback):
         self.run_name = f"{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
     def setup(self, trainer, pl_module, stage=None):
-        """Инициализация MLflow в начале обучения"""
         if stage != "fit":
             return
 
@@ -26,7 +25,6 @@ class MLflowLogger(pl.Callback):
         mlflow.set_experiment(self.cfg.mlflow.experiment_name)
         mlflow.start_run(run_name=self.run_name)
 
-        # Логирование параметров
         params = {
             "batch_size": self.cfg.training.batch_size,
             "learning_rate": self.cfg.training.learning_rate,
@@ -37,7 +35,6 @@ class MLflowLogger(pl.Callback):
         }
         mlflow.log_params(params)
 
-        # Логирование git commit
         try:
             repo = git.Repo(search_parent_directories=True)
             mlflow.log_param("git_commit", repo.head.commit.hexsha)
@@ -45,7 +42,6 @@ class MLflowLogger(pl.Callback):
             print(f"Could not log git commit: {e}")
 
     def on_train_epoch_end(self, trainer, pl_module, outputs):
-        """Логирование метрик после каждой тренировочной эпохи"""
         metrics = trainer.callback_metrics
         mlflow.log_metrics(
             {
@@ -56,7 +52,6 @@ class MLflowLogger(pl.Callback):
         )
 
     def on_validation_epoch_end(self, trainer, pl_module):
-        """Логирование метрик после каждой валидационной эпохи"""
         metrics = trainer.callback_metrics
         mlflow.log_metrics(
             {
@@ -67,14 +62,12 @@ class MLflowLogger(pl.Callback):
         )
 
     def teardown(self, trainer, pl_module, stage=None):
-        """Завершение работы MLflow в конце обучения"""
         if stage == "fit":
             mlflow.end_run()
 
 
 @hydra.main(config_path="../conf", config_name="config", version_base="1.3")
 def train(cfg: DictConfig):
-    # Инициализация модуля данных
     datamodule = HumanActionDataModule(
         data_dir=Path("data"),
         batch_size=cfg.training.batch_size,
@@ -84,13 +77,11 @@ def train(cfg: DictConfig):
         target_size=tuple(cfg.training.target_size),
     )
 
-    # Инициализация модели
     model = VideoActionModel(
         num_classes=cfg.model.num_classes,
         learning_rate=cfg.training.learning_rate,
     )
 
-    # Callback для сохранения моделей
     checkpoint_callback = ModelCheckpoint(
         monitor=cfg.model.monitor,
         mode=cfg.model.mode,
@@ -98,10 +89,8 @@ def train(cfg: DictConfig):
         filename=cfg.model.checkpoint_filename,
     )
 
-    # Инициализация MLflow callback
     mlflow_callback = MLflowLogger(cfg)
 
-    # Тренер с калбэками
     trainer = pl.Trainer(
         max_epochs=cfg.training.max_epochs,
         callbacks=[checkpoint_callback, mlflow_callback],
@@ -109,10 +98,9 @@ def train(cfg: DictConfig):
         enable_progress_bar=cfg.training.enable_progress_bar,
     )
 
-    # Запуск обучения
     trainer.fit(model, datamodule=datamodule)
 
-    # Логирование тестовых метрик
+    """# Логирование тестовых метрик
     if hasattr(datamodule, "test_dataloader"):
         test_results = trainer.test(model, datamodule=datamodule)
         with mlflow.start_run(run_id=mlflow_callback.run_id):
@@ -121,7 +109,7 @@ def train(cfg: DictConfig):
                     "test_loss": test_results[0].get("test_loss", float("nan")),
                     "test_acc": test_results[0].get("test_acc", float("nan")),
                 }
-            )
+            )"""
 
 
 if __name__ == "__main__":

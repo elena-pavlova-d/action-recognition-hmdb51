@@ -12,7 +12,7 @@ class HumanActionDataset(Dataset):
     def __init__(
         self,
         root_dir: Union[str, Path],
-        split: str = "train",  # 'train', 'val' or 'test'
+        split: str = "train",
         seq_len: int = 16,
         num_classes: int = 51,
         transform: Optional[Callable] = None,
@@ -26,13 +26,11 @@ class HumanActionDataset(Dataset):
         self.target_size = target_size
         self.resize = T.Resize(target_size)
 
-        # Получаем список классов (поддиректорий в train/val/test)
         split_dir = self.root_dir / split
         self.classes = sorted(
             [cls.name for cls in split_dir.iterdir() if cls.is_dir()]
         )[: self.num_classes]
 
-        # Собираем все видеофайлы для выбранного split
         self.files_list = []
         for cls in self.classes:
             cls_dir = split_dir / cls
@@ -106,7 +104,6 @@ class HumanActionDataModule(pl.LightningDataModule):
         self.test_dataset = None
 
     def prepare_data(self):
-        # Проверяем наличие данных
         for split in ["train", "val", "test"]:
             split_dir = self.data_dir / split
             if not split_dir.exists():

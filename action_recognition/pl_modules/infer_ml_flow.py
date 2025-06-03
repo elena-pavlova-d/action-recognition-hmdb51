@@ -17,7 +17,7 @@ class MLflowLogger(pl.Callback):
         self.run_name = f"{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         self.run_active = False
 
-    def setup(self, trainer, pl_module, stage: str):  # <-- исправлено здесь
+    def setup(self, trainer, pl_module, stage: str):
         if not self.run_active:
             mlflow.set_tracking_uri(self.cfg.mlflow.tracking_uri)
             mlflow.set_experiment(self.cfg.mlflow.experiment_name)
@@ -60,11 +60,10 @@ class MLflowLogger(pl.Callback):
 
 @hydra.main(
     config_path="../../conf",
-    config_name="config",  # Используем основной конфиг для доступа к настройкам MLflow
+    config_name="config",
     version_base="1.3",
 )
 def infer(cfg: DictConfig):
-    # Инициализация данных
     data_dir = Path(cfg.inference.data_dir)
 
     datamodule = HumanActionDataModule(
@@ -77,20 +76,16 @@ def infer(cfg: DictConfig):
     )
     datamodule.setup(stage="test")
 
-    # Загрузка модели
     model = VideoActionModel.load_from_checkpoint(cfg.inference.ckpt_path)
 
-    # Инициализация MLflow callback
     mlflow_callback = MLflowLogger(cfg)
 
-    # Настройка Trainer с MLflow callback
     trainer = pl.Trainer(
         accelerator="auto",
         callbacks=[mlflow_callback],
-        logger=True,  # Отключаем стандартные логгеры, т.к. используем MLflow
+        logger=True,
     )
 
-    # Запуск тестирования с логированием
     trainer.test(model=model, datamodule=datamodule)
 
 

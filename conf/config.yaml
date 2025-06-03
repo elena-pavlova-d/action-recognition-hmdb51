@@ -4,4 +4,5 @@ defaults:
   - model: model
   - inference: inference
   - mlflow: mlflow
+  - export: export
   - _self_

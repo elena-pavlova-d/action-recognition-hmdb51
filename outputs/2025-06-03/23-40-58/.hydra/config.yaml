@@ -1,0 +1,9 @@
+ckpt_path: lightning_logs/version_45/checkpoints/best-epoch=0-val_acc=0.08.ckpt
+data_dir: data
+batch_size: 8
+num_workers: 0
+seq_len: 16
+target_size:
+  - 128
+  - 128
+num_classes: 51

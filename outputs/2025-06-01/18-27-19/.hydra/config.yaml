@@ -1,0 +1,55 @@
+base_dir: ${hydra:runtime.cwd}
+data_dir: ${base_dir}/data
+raw_data_dir: ${data_dir}/raw_data
+extracted_data_dir: ${data_dir}/data
+rar_path: ${base_dir}/hmdb51_org.rar
+download_url: http://serre-lab.clps.brown.edu/wp-content/uploads/2013/10/hmdb51_org.rar
+split:
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+  seed: 42
+training:
+  max_epochs: 3
+  learning_rate: 0.001
+  batch_size: 8
+  num_workers: 0
+  seq_len: 16
+  target_size:
+    - 128
+    - 128
+  accelerator: auto
+  enable_progress_bar: true
+  logging:
+    metrics:
+      - train_loss
+      - train_acc
+      - val_loss
+      - val_acc
+      - test_loss
+      - test_acc
+    params_to_log:
+      - batch_size
+      - learning_rate
+      - seq_len
+      - target_size
+model:
+  num_classes: 51
+  save_top_k: 2
+  monitor: val_acc
+  mode: max
+  checkpoint_filename: best-{epoch}-{val_acc:.2f}
+  name: video_action_model
+inference:
+  ckpt_path: path/to/checkpoint.ckpt
+  data_dir: data
+  batch_size: 8
+  num_workers: 0
+  seq_len: 16
+  target_size:
+    - 128
+    - 128
+  num_classes: 51
+mlflow:
+  tracking_uri: http://127.0.0.1:8080
+  experiment_name: action_recognition
