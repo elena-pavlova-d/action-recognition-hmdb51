@@ -1,2 +1,4 @@
 tracking_uri: file:./plots/mlruns #"http://127.0.0.1:8080"
 experiment_name: "action_recognition"
+registered_model_name: "VideoActionModel"
+model_stage: "Staging"

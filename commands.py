@@ -58,6 +58,21 @@ def train_ml_flow():
 
 
 @app.command()
+def train_ml_flow_server_dvc():
+    """Запустить обучение с для Mlflow Server"""
+    subprocess.run(
+        [
+            "poetry",
+            "run",
+            "python",
+            "-m",
+            "action_recognition.train_ml_flow_server_dvc",
+        ],
+        check=True,
+    )
+
+
+@app.command()
 def infer_from_onnx():
     """Запустить inference из ONNX модели"""
     subprocess.run(
