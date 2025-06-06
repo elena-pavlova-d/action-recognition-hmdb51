@@ -126,6 +126,12 @@ poetry run python commands.py convert-trt
 
 ## Inference
 
+Для начала запустите код для создания csv файла с соответствием индекса классу
+
+```bash
+poetry run python commands.py index-to-class
+```
+
 Чтобы запустить inference из ONNX модели выполните:
 
 ```bash

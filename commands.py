@@ -73,6 +73,15 @@ def train_ml_flow_server_dvc():
 
 
 @app.command()
+def index_to_class():
+    """Запустить index_to_class"""
+    subprocess.run(
+        ["poetry", "run", "python", "-m", "scripts.index_to_class"],
+        check=True,
+    )
+
+
+@app.command()
 def infer_from_onnx():
     """Запустить inference из ONNX модели"""
     subprocess.run(
