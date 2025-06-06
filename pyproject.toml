@@ -3,7 +3,7 @@ name = "action-recognition"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "edpavlova_1",email = "edpavlova_1@edu.hse.ru"}
+    {name = "edpavlova_1",email = "pavlova.elena6789@gmail.com"}
 ]
 readme = "README.md"
 requires-python = ">=3.11"
