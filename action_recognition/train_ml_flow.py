@@ -41,7 +41,7 @@ class MLflowLogger(pl.Callback):
         except Exception as e:
             print(f"Could not log git commit: {e}")
 
-    def on_train_epoch_end(self, trainer, pl_module, outputs):
+    def on_train_epoch_end(self, trainer, pl_module):
         metrics = trainer.callback_metrics
         mlflow.log_metrics(
             {
